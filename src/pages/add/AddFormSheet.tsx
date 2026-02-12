@@ -37,7 +37,7 @@ export default function AddFormSheet({ open, onClose }: Props) {
       },
       hasEndWork: false,
       endWorkDate: "",
-      structureType: "",
+      //   structureType: "",
       description: "",
       owner: {
         firstName: "",
@@ -202,7 +202,7 @@ export default function AddFormSheet({ open, onClose }: Props) {
           <Controller
             name="structureType"
             control={control}
-            defaultValue=""
+            defaultValue={undefined}
             render={({ field }) => (
               <select
                 {...field}
