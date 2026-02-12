@@ -1,0 +1,145 @@
+@import "tailwindcss";
+@font-face {
+  font-family: "BYekan";
+  src: url("/font/BYekan.ttf") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "BYekan";
+  src: url("/font/BYekan.woff2") format("woff2");
+  font-weight: 700;
+  font-style: bold;
+}
+@font-face {
+  font-family: "nas";
+  src:
+    url("/font/nas.woff2") format("woff2"),
+    url("/font/nas.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "nas";
+  src:
+    url("/font/nas-Bold.woff2") format("woff2"),
+    url("/font/nas-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+@theme {
+  --font-yekan: "BYekan", sans-serif;
+  --font-nas: "nas";
+}
+:root {
+  --bg: #efeeee;
+  --text: #1f2933;
+}
+
+.dark {
+  --bg: #0f172a;
+  --text: #cbd5e1;
+}
+
+body {
+  font-family: "BYekan", sans-serif;
+
+  background-color: var(--bg);
+  color: var(--text);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+@keyframes bounce-text {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.animate-bounce-text {
+  animation: bounce-text 3s ease-in-out infinite;
+}
+@keyframes wave-flag {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(2deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(-2deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.animate-wave {
+  animation: wave-flag 2s ease-in-out infinite;
+  transform-origin: top left; /* نقطه اتصال پرچم */
+}
+@keyframes scroll-text {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-scroll {
+  display: inline-block;
+  animation: scroll-text 17s linear infinite;
+}
+
+/* Scrollbar لایت مود */
+.scrollbar-light::-webkit-scrollbar {
+  width: 8px;
+}
+.scrollbar-light::-webkit-scrollbar-track {
+  background: #f0f0f3;
+  border-radius: 9999px;
+}
+.scrollbar-light::-webkit-scrollbar-thumb {
+  background: #d1d9e6;
+  border-radius: 9999px;
+  box-shadow:
+    inset 2px 2px 4px rgba(0, 0, 0, 0.15),
+    inset -2px -2px 4px rgba(255, 255, 255, 0.6);
+}
+
+/* Scrollbar دارک مود */
+.scrollbar-dark::-webkit-scrollbar {
+  width: 8px;
+}
+.scrollbar-dark::-webkit-scrollbar-track {
+  background: #0f172a;
+  border-radius: 9999px;
+}
+.scrollbar-dark::-webkit-scrollbar-thumb {
+  background: #2a2f3a;
+  border-radius: 9999px;
+  box-shadow:
+    inset 2px 2px 4px rgba(0, 0, 0, 0.5),
+    inset -2px -2px 4px rgba(255, 255, 255, 0.1);
+}
+
+/* برای Firefox */
+.scrollbar-light {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d9e6 #f0f0f3;
+}
+.scrollbar-dark {
+  scrollbar-width: thin;
+  scrollbar-color: #2a2f3a #0f172a;
+}
