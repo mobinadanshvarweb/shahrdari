@@ -3,7 +3,6 @@ import { Controller, type Control } from "react-hook-form";
 import TextInput from "../../components/TextInput";
 import NumericInput from "../../components/NumericInput";
 import DateInput from "../../components/DateInput";
-import { div } from "framer-motion/client";
 
 type Props = {
   control: Control<any>; // control از react-hook-form
