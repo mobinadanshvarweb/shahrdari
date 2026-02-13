@@ -13,7 +13,15 @@ export const addSchema = z.object({
   }),
   hasEndWork: z.boolean(),
   endWorkDate: z.string().optional(), // فقط اگر پایان کار دارد
-  structureType: z.enum(["فلزی", "بتن", "آجر"]),
+  // structureType: z.enum(["فلزی", "بتن", "آجر"]),
+  structureType: z.enum(["فلزی", "بتن", "آجر"], {
+  message: "نوع سازه را انتخاب کنید",
+}),
+
+
+  // structureType: z
+  // .string()
+  // .min(1, "نوع سازه را انتخاب کنید"),
   description: z.string().min(1, "پر کردن توضیحات الزامی است"),
   owner: z.object({
     firstName: z.string().min(1, "نام الزامی است"),

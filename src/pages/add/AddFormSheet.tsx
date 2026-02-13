@@ -11,10 +11,7 @@ import { addFormData } from "../../redux/slice/formSlice";
 import { addSchema, type AddFormValues } from "../../schema/addSchema";
 import type { RootState } from "../../redux/store/store";
 
-type Props = {
-  open: boolean;
-  onClose: () => void;
-};
+type Props = { open: boolean; onClose: () => void };
 
 export default function AddFormSheet({ open, onClose }: Props) {
   const dispatch = useDispatch();
@@ -37,7 +34,7 @@ export default function AddFormSheet({ open, onClose }: Props) {
       },
       hasEndWork: false,
       endWorkDate: "",
-      //   structureType: "",
+      structureType: undefined as any,
       description: "",
       owner: {
         firstName: "",
@@ -53,41 +50,33 @@ export default function AddFormSheet({ open, onClose }: Props) {
 
   if (!open) return null;
 
-  // --- وقتی روی ثبت کلیک شد ---
   const onSubmit = (data: AddFormValues) => {
-    setPendingData(data); // داده‌ها اینجا نگه داشته میشن
-    setConfirmOpen(true); // باز شدن modal تایید
+    setPendingData(data);
+    setConfirmOpen(true);
   };
 
-  // --- وقتی روی "بله" کلیک شد ---
   const onConfirm = () => {
     if (!pendingData) return;
-
     const finalData = { ...pendingData, createdAt: new Date().toISOString() };
-    dispatch(addFormData(finalData)); // اضافه به Redux
+    dispatch(addFormData(finalData));
     setConfirmOpen(false);
-    reset(); // ریست فرم
+    reset();
     setPendingData(null);
-    onClose(); // بستن فرم
+    onClose();
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
-      {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/30 backdrop-blur-sm"
         onClick={onClose}
       />
 
-      {/* فرم اصلی */}
       <div
-        className={`
-          relative w-full sm:w-[500px] rounded-t-3xl sm:rounded-3xl 
-          bg-[var(--bg)] text-[var(--text)] p-6 sm:p-8 
-          shadow-[8px_8px_16px_rgba(0,0,0,0.2),_-8px_-8px_16px_rgba(255,255,255,0.05)] 
-          max-h-[90vh] overflow-y-auto
-          ${dark ? "scrollbar-dark" : "scrollbar-light"}
-        `}
+        className={`relative w-full sm:w-[500px] rounded-t-3xl sm:rounded-3xl 
+        bg-[var(--bg)] text-[var(--text)] p-6 sm:p-8 
+        shadow-[8px_8px_16px_rgba(0,0,0,0.2),_-8px_-8px_16px_rgba(255,255,255,0.05)] 
+        max-h-[90vh] overflow-y-auto ${dark ? "scrollbar-dark" : "scrollbar-light"}`}
       >
         <h2 className="text-xl mb-8 text-center">افزودن اطلاعات ملک</h2>
 
@@ -95,7 +84,7 @@ export default function AddFormSheet({ open, onClose }: Props) {
           onSubmit={handleSubmit(onSubmit)}
           className="space-y-4 text-right"
         >
-          {/* --- گروه کد ملک --- */}
+          {/* کد ملک */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             <Controller
               name="code.region"
@@ -152,9 +141,6 @@ export default function AddFormSheet({ open, onClose }: Props) {
             />
           </div>
 
-          {/* جداکننده نئومورفیک */}
-          <div className="w-full h-px bg-[var(--bg-divider)] my-4 shadow-[inset_1px_1px_2px_rgba(0,0,0,0.1),inset_-1px_-1px_2px_rgba(255,255,255,0.6)]" />
-
           {/* توضیحات */}
           <Controller
             name="description"
@@ -164,8 +150,29 @@ export default function AddFormSheet({ open, onClose }: Props) {
             )}
           />
 
-          <div className="w-full h-px bg-[var(--bg-divider)] my-4 shadow-[inset_1px_1px_2px_rgba(0,0,0,0.1),inset_-1px_-1px_2px_rgba(255,255,255,0.6)]" />
-
+          {/* نوع سازه */}
+          <Controller
+            name="structureType"
+            control={control}
+            render={({ field }) => (
+              <div className="flex flex-col">
+                <label className="flex w-full  justify-end items-center gap-2 text-xs">
+                  نوع سازه
+                </label>
+                <select
+                  {...field}
+                  className="p-2 rounded-lg shadow-inner border border-white/20 w-full text-right"
+                >
+                  <option value="انتخاب کنید" disabled>
+                    انتخاب کنید
+                  </option>
+                  <option value="فلزی">فلزی</option>
+                  <option value="بتن">بتن</option>
+                  <option value="آجر">آجر</option>
+                </select>
+              </div>
+            )}
+          />
           {/* پایان کار */}
           <div className="flex flex-col sm:flex-row justify-end items-start sm:items-center gap-4">
             {watchHasEndWork && (
@@ -198,33 +205,12 @@ export default function AddFormSheet({ open, onClose }: Props) {
             />
           </div>
 
-          {/* نوع سازه */}
-          <Controller
-            name="structureType"
-            control={control}
-            defaultValue={undefined}
-            render={({ field }) => (
-              <select
-                {...field}
-                className="p-2 rounded-lg shadow-inner border border-white/20 w-full text-right"
-              >
-                <option value="" disabled>
-                  نوع سازه
-                </option>
-                <option value="فلزی">فلزی</option>
-                <option value="بتن">بتن</option>
-                <option value="آجر">آجر</option>
-              </select>
-            )}
-          />
-
-          {/* Accordion اطلاعات مالک */}
+          {/* Accordion مالک */}
           <AddOwnerAccordion control={control} />
 
-          {/* دکمه ثبت */}
           <button
             type="submit"
-            className="w-full py-3 rounded-xl bg-emerald-500 text-white shadow-md"
+            className="w-full py-3 rounded-xl bg-emerald-500 text-white shadow-md cursor-pointer"
           >
             ثبت اطلاعات
           </button>
@@ -234,17 +220,17 @@ export default function AddFormSheet({ open, onClose }: Props) {
       {/* Confirm Modal */}
       {confirmOpen && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-          <div className="bg-[var(--bg)] p-6 rounded-2xl shadow-lg w-11/12 max-w-sm text-center">
+          <div className="bg-(--bg) p-6 rounded-2xl shadow-lg w-11/12 max-w-sm text-center">
             <p className="mb-4">آیا از صحت اطلاعات ثبت شده اطمینان دارید؟</p>
             <div className="flex justify-around gap-4">
               <button
-                className="px-4 py-2 rounded-lg bg-gray-300"
+                className="px-4 py-2 rounded-lg bg-gray-300 cursor-pointer"
                 onClick={() => setConfirmOpen(false)}
               >
                 ویرایش
               </button>
               <button
-                className="px-4 py-2 rounded-lg bg-emerald-500 text-white"
+                className="px-4 py-2 rounded-lg bg-emerald-500 text-white cursor-pointer"
                 onClick={onConfirm}
               >
                 بله

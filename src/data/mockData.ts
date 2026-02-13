@@ -1,8 +1,4 @@
-// ===== Mock Data for Add Form =====
-// این فایل شامل داده‌های نمونه برای فرم افزودن اطلاعات
-// و تابعی برای اضافه کردن داده جدید است.
-// با این کار حتی اگر کاربر چیزی وارد نکرده باشد، لیست اولیه قابل نمایش است.
-
+// ===== Mock Data & Types =====
 export interface Owner {
   firstName: string;
   lastName: string;
@@ -12,26 +8,26 @@ export interface Owner {
 }
 
 export interface Code {
-  region: string; // 2 رقم
-  neighborhood: string; // 2 رقم
-  block: string; // 3 رقم
-  property: string; // 3 رقم
-  building: string; // 2 رقم
-  apartment?: string; // 3 رقم اختیاری
-  unit?: string; // 3 رقم اختیاری
+  region: string;
+  neighborhood: string;
+  block: string;
+  property: string;
+  building: string;
+  apartment?: string;
+  unit?: string;
 }
 
 export interface FormData {
   code: Code;
   hasEndWork: boolean;
-  endWorkDate?: string; // YYYY-MM-DD، اگر پایان کار دارد
+  endWorkDate?: string;
   structureType: "فلزی" | "بتن" | "آجر";
   description: string;
   owner: Owner;
   createdAt: string; // ISO timestamp
 }
 
-// ---------- داده فیک اولیه ----------
+// ---------- داده اولیه ----------
 export const mockData: FormData[] = [
   {
     code: {
@@ -79,24 +75,3 @@ export const mockData: FormData[] = [
     createdAt: "2026-02-12T19:00:00.000Z",
   },
 ];
-
-// ---------- دیتاست ذخیره موقت ----------
-let dataStore: FormData[] = [...mockData];
-
-// ---------- توابع کمکی ----------
-
-// دریافت تمام داده‌ها
-export const getMockData = (): FormData[] => {
-  return dataStore;
-};
-
-// اضافه کردن یک داده جدید
-export const addMockData = (item: FormData): FormData => {
-  dataStore.push(item);
-  return item;
-};
-
-// ریست کردن داده‌ها (اختیاری برای تست)
-export const resetMockData = () => {
-  dataStore = [...mockData];
-};

@@ -1,17 +1,39 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { FormData } from "../../data/mockData";
-import { getMockData, addMockData } from "../../data/mockData";
 
+// ---------- LocalStorage Helpers ----------
+const STORAGE_KEY = "forms";
+
+const loadFromStorage = (): FormData[] => {
+  try {
+    const data = localStorage.getItem(STORAGE_KEY);
+    return data ? JSON.parse(data) : [];
+  } catch (error) {
+    console.error("Error loading from localStorage", error);
+    return [];
+  }
+};
+
+const saveToStorage = (data: FormData[]) => {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch (error) {
+    console.error("Error saving to localStorage", error);
+  }
+};
+
+// ---------- State ----------
 interface FormState {
-  data: FormData[]; // تمام فرم‌های ثبت شده
-  currentForm?: FormData; // فرم در حال ویرایش (اختیاری)
+  data: FormData[];
+  currentForm?: FormData;
 }
 
 const initialState: FormState = {
-  data: getMockData(), // لیست اولیه از Mock
+  data: loadFromStorage(), // داده‌ها از LocalStorage خوانده می‌شود
   currentForm: undefined,
 };
 
+// ---------- Slice ----------
 export const formSlice = createSlice({
   name: "form",
   initialState,
@@ -22,9 +44,8 @@ export const formSlice = createSlice({
       action: PayloadAction<{ field: string; value: any }>,
     ) => {
       if (!state.currentForm) state.currentForm = {} as FormData;
-      const keys = action.payload.field.split("."); // مثال: "code.region"
+      const keys = action.payload.field.split(".");
       let obj: any = state.currentForm;
-
       for (let i = 0; i < keys.length - 1; i++) {
         if (!obj[keys[i]]) obj[keys[i]] = {};
         obj = obj[keys[i]];
@@ -34,18 +55,28 @@ export const formSlice = createSlice({
 
     // ثبت فرم جدید
     addFormData: (state, action: PayloadAction<FormData>) => {
-      const item = addMockData(action.payload); // اضافه به Mock
-      state.data.push(item); // اضافه به Redux
-      state.currentForm = undefined; // ریست فرم
+      state.data.push(action.payload);
+      saveToStorage(state.data); // ذخیره در LocalStorage
+      state.currentForm = undefined;
     },
 
-    // بارگذاری داده‌ها از Mock (اختیاری)
-    loadData: (state) => {
-      state.data = getMockData();
+    // حذف فرم
+    removeFormData: (state, action: PayloadAction<string>) => {
+      state.data = state.data.filter(
+        (item) => item.createdAt !== action.payload,
+      );
+      saveToStorage(state.data);
+    },
+
+    // پاک کردن کل داده‌ها
+    clearAllData: (state) => {
+      state.data = [];
+      saveToStorage([]);
     },
   },
 });
 
-export const { updateField, addFormData, loadData } = formSlice.actions;
+export const { updateField, addFormData, removeFormData, clearAllData } =
+  formSlice.actions;
 
 export default formSlice.reducer;

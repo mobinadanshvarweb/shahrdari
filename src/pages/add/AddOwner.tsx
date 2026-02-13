@@ -3,6 +3,7 @@ import { Controller, type Control } from "react-hook-form";
 import TextInput from "../../components/TextInput";
 import NumericInput from "../../components/NumericInput";
 import DateInput from "../../components/DateInput";
+import { div } from "framer-motion/client";
 
 type Props = {
   control: Control<any>; // control از react-hook-form
@@ -47,7 +48,10 @@ export default function AddOwnerAccordion({ control }: Props) {
             name="owner.birthDate"
             control={control}
             render={({ field }) => (
-              <DateInput {...field} placeholder="تاریخ تولد" />
+              <div className="flex flex-col">
+                <label className="flex justify-end text-xs">تاریخ تولد</label>
+                <DateInput {...field} placeholder="تاریخ تولد" />
+              </div>
             )}
           />
           <Controller
